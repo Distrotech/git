@@ -1044,13 +1044,13 @@ endif
 ifeq ($(uname_S),Darwin)
 	ifndef NO_FINK
 		ifeq ($(shell test -d /sw/lib && echo y),y)
-			BASIC_CFLAGS += -I/sw/include
+			BASIC_CFLAGS += -I=/sw/include
 			BASIC_LDFLAGS += -L/sw/lib
 		endif
 	endif
 	ifndef NO_DARWIN_PORTS
 		ifeq ($(shell test -d /opt/local/lib && echo y),y)
-			BASIC_CFLAGS += -I/opt/local/include
+			BASIC_CFLAGS += -I=/opt/local/include
 			BASIC_LDFLAGS += -L/opt/local/lib
 		endif
 	endif
@@ -2011,7 +2011,7 @@ git-%$X: %.o GIT-LDFLAGS $(GITLIBS)
 
 git-imap-send$X: imap-send.o GIT-LDFLAGS $(GITLIBS)
 	$(QUIET_LINK)$(CC) $(ALL_CFLAGS) -o $@ $(ALL_LDFLAGS) $(filter %.o,$^) \
-		$(LIBS) $(OPENSSL_LINK) $(OPENSSL_LIBSSL) $(LIB_4_CRYPTO)
+		$(LIBS) $(OPENSSL_LINK) $(OPENSSL_LIBSSL) $(LIB_4_CRYPTO) -ldl
 
 git-http-fetch$X: revision.o http.o http-walker.o http-fetch.o GIT-LDFLAGS $(GITLIBS)
 	$(QUIET_LINK)$(CC) $(ALL_CFLAGS) -o $@ $(ALL_LDFLAGS) $(filter %.o,$^) \
@@ -2434,7 +2434,6 @@ dist-doc:
 ### Cleaning rules
 
 distclean: clean
-	$(RM) configure
 	$(RM) config.log config.status config.cache
 	$(RM) config.mak.autogen config.mak.append
 	$(RM) -r autom4te.cache
